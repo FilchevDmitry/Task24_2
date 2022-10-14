@@ -22,7 +22,7 @@ int main()
 		{
 			end = false;
 		}
-		else 
+		else
 		{
 			std::string data;
 			int year;
@@ -30,20 +30,25 @@ int main()
 			int day;
 			int month;
 			std::cout << "Enter your date of birth(YYYY/M/D) - ";
-			std::cin>>data;
+			std::cin >> data;
 			std::stringstream timer(data);
-			timer >> year >>temp>>month>>temp>>day;		
+			timer >> year >> temp >> month >> temp >> day;
 			birthday[month][day].push_back(name);
 		}
 	}
-		std::map<int, std::map<int,std::vector<std::string>>>::const_iterator find_birthday;
-		std::time_t timer = time(nullptr);
-		std::tm t = *std::localtime(&timer);
-		int temp_month = t.tm_mon;
-		int temp_day=t.tm_mday;
-		find_birthday = birthday.lower_bound(temp_month);
-		if (find_birthday != birthday.end())
-		{
-			std::cout << find_birthday->second.lower_bound(temp_day)->second.at(0) << std::endl;
-		}
+	std::map<int, std::map<int, std::vector<std::string>>>::const_iterator find_birthday;
+	std::time_t timer = time(nullptr);
+	std::tm t = *std::localtime(&timer);
+	int temp_month = t.tm_mon;
+	int temp_day = t.tm_mday;
+	find_birthday = birthday.lower_bound(temp_month);
+	while (find_birthday != birthday.end())
+	{
+		auto beg = find_birthday->second.lower_bound(temp_day);
+		if (beg->second.empty())
+			continue;
+		for (const auto& birthday : find_birthday->second.lower_bound(temp_day)->second)
+			std::cout << birthday << std::endl;
+		find_birthday++;
+	}
 }
